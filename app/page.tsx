@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import CalendarBody from "@/components/calendarBody";
 

@@ -1,9 +1,8 @@
-"use client";
-
-import { useState } from "react";
+import { useState, useRef } from "react";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import localeData from "dayjs/plugin/localeData";
+import { useDrag } from "@use-gesture/react";
 
 dayjs.extend(weekday);
 dayjs.extend(localeData);
@@ -15,18 +14,41 @@ export default function CalendarBody() {
   const offset = currentDate.startOf("month").weekday();
   const monthLabel = currentDate.format("M月");
   const yearLabel = currentDate.format("YYYY年");
+  const today = dayjs().date();
+  const todayMonth = dayjs().month();
+  const lastSwipeTime = useRef(0); // スワイプの連続実行を防ぐ
 
   const prevMonth = () => {
-    setCurrentDate(currentDate.subtract(1, "month"));
+    setCurrentDate((prev) => prev.subtract(1, "month"));
   };
   const nextMonth = () => {
-    setCurrentDate(currentDate.add(1, "month"));
+    setCurrentDate((prev) => prev.add(1, "month"));
   };
 
-  const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+  // スワイプハンドラー
+  const bind = useDrag(({ movement: [mx], direction: [dx], down, cancel }) => {
+    if (down) return; // スワイプ中は何もしない
+
+    const now = Date.now();
+    if (now - lastSwipeTime.current < 500) {
+      cancel(); // 連続スワイプ防止（500ms以内の連続入力を無視）
+      return;
+    }
+    lastSwipeTime.current = now;
+
+    const swipeThreshold = 50; // スワイプのしきい値を設定（50px以上）
+    if (Math.abs(mx) < swipeThreshold) {
+      cancel(); // 小さな動きはキャンセル
+      return;
+    }
+
+    if (dx > 0) prevMonth(); // 右スワイプ → 前の月へ
+    if (dx < 0) nextMonth(); // 左スワイプ → 次の月へ
+    cancel(); // 処理完了後にイベントをキャンセル
+  });
 
   return (
-    <div className="calendar-body">
+    <div {...bind()} className="calendar-body" style={{ touchAction: "none" }}>
       <p className="year text-center mt-6">{yearLabel}</p>
       <div className="flex justify-between">
         <button onClick={prevMonth} className="button">
@@ -54,11 +76,22 @@ export default function CalendarBody() {
           <div key={`empty-${i}`} className="text-center h-20"></div>
         ))}
         {/* 各日付のセル */}
-        {days.map((day) => (
-          <div key={day} className="text-center h-20 flex pt-1 justify-center">
-            <span>{day}</span>
-          </div>
-        ))}
+        {Array.from({ length: daysInMonth }, (_, i) => {
+          const day = i + 1;
+          const isToday = day === today && currentDate.month() === todayMonth;
+
+          return (
+            <div key={day} className="text-center h-20">
+              <span
+                className={`block w-5 h-5 mx-auto ${
+                  isToday ? "rounded-full bg-red-500 text-white" : "text-white"
+                }`}
+              >
+                {day}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
