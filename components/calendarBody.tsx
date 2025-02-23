@@ -1,8 +1,12 @@
+"use client";
+
 import { useState, useRef } from "react";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import localeData from "dayjs/plugin/localeData";
 import { useDrag } from "@use-gesture/react";
+import Link from "next/link";
+// import { useSwitchState } from "./hooks/useSwitchState";
 
 dayjs.extend(weekday);
 dayjs.extend(localeData);
@@ -16,7 +20,7 @@ export default function CalendarBody() {
   const yearLabel = currentDate.format("YYYY年");
   const today = dayjs().date();
   const todayMonth = dayjs().month();
-  const lastSwipeTime = useRef(0); // スワイプの連続実行を防ぐ
+  const lastSwipeTime = useRef(0);
 
   const prevMonth = () => {
     setCurrentDate((prev) => prev.subtract(1, "month"));
@@ -27,25 +31,27 @@ export default function CalendarBody() {
 
   // スワイプハンドラー
   const bind = useDrag(({ movement: [mx], direction: [dx], down, cancel }) => {
-    if (down) return; // スワイプ中は何もしない
+    if (down) return;
 
     const now = Date.now();
     if (now - lastSwipeTime.current < 500) {
-      cancel(); // 連続スワイプ防止（500ms以内の連続入力を無視）
+      cancel();
       return;
     }
     lastSwipeTime.current = now;
 
-    const swipeThreshold = 50; // スワイプのしきい値を設定（50px以上）
+    const swipeThreshold = 50;
     if (Math.abs(mx) < swipeThreshold) {
-      cancel(); // 小さな動きはキャンセル
+      cancel();
       return;
     }
 
-    if (dx > 0) prevMonth(); // 右スワイプ → 前の月へ
-    if (dx < 0) nextMonth(); // 左スワイプ → 次の月へ
-    cancel(); // 処理完了後にイベントをキャンセル
+    if (dx > 0) prevMonth();
+    if (dx < 0) nextMonth();
+    cancel();
   });
+
+  // const { isSupplementEnabled } = useSwitchState();
 
   return (
     <div {...bind()} className="calendar-body" style={{ touchAction: "none" }}>
@@ -82,13 +88,26 @@ export default function CalendarBody() {
 
           return (
             <div key={day} className="text-center h-20">
-              <span
-                className={`block w-5 h-5 mx-auto ${
-                  isToday ? "rounded-full bg-red-500 text-white" : "text-white"
-                }`}
+              <Link
+                href={`/day/${currentDate.format("YYYY")}/${currentDate.format(
+                  "MM"
+                )}/${day}`}
               >
-                {day}
-              </span>
+                <span
+                  className={`block w-5 h-5 mx-auto ${
+                    isToday
+                      ? "rounded-full bg-red-500 text-white"
+                      : "text-white"
+                  }`}
+                >
+                  {day}
+                </span>
+                <div className="">
+                  {/* <p>
+                    スイッチの状態（親側）: {isSupplementEnabled ? "ON" : "OFF"}
+                  </p> */}
+                </div>
+              </Link>
             </div>
           );
         })}
