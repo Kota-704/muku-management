@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Switch } from "@heroui/switch";
 import { use, useRef } from "react";
+import { Textarea } from "@heroui/input";
 
 export default function DayDetailPage({
   params,
@@ -29,6 +30,13 @@ export default function DayDetailPage({
           aria-label="サプリメントの状態"
           onChange={handleRef}
           ref={ref}
+        />
+      </div>
+      <div className="text-center mt-5">
+        <p className="mb-1">メッセージ</p>
+        <Textarea
+          className="max-w-xs mx-auto"
+          placeholder="メッセージを入力してください"
         />
       </div>
     </div>
