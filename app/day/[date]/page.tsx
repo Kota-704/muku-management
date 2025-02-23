@@ -1,15 +1,10 @@
-import dayjs from "dayjs";
-
 interface DayDetailProps {
-  params: { date: string };
+  params: Promise<{ date: string }>;
 }
 
-export default function DayDetail({ params }: DayDetailProps) {
-  const formattedDate = dayjs(params.date).format("D日");
+export default async function DayDetailPage({ params }: DayDetailProps) {
+  const resolvedParams = await params;
+  const { date } = resolvedParams;
 
-  return (
-    <div>
-      <h1 className="text-center mt-4">{formattedDate}</h1>
-    </div>
-  );
+  return <div>Selected date: {date}</div>;
 }
