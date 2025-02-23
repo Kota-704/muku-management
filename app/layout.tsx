@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Image from "next/image";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +28,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="wrapper p-3 min-h-screen">
+          <h1 className="text-center mt-4">椋の管理アプリ</h1>
+          <button className="absolute top-6 right-3">
+            <Image
+              src="/settings-2-svgrepo-com.svg"
+              width={32}
+              height={32}
+              alt="Settings Icon"
+            ></Image>
+          </button>
+          {children}
+        </div>
       </body>
     </html>
   );
