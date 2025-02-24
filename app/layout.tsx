@@ -34,7 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ],
     },
     icons: {
-      apple: "/apple-touch-icon.png",
+      apple: "/muku_ogp.png",
     },
     manifest: "/manifest.json",
   };
