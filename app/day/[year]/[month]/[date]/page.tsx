@@ -80,7 +80,7 @@ export default function DayDetailPage() {
         <Switch
           aria-label="散歩の状態"
           checked={stroll}
-          onChange={(e) => setStroll(e.checked)}
+          onChange={(e) => setStroll(e.target.checked)}
         />
       </div>
       <div className="text-center mt-5">
@@ -88,7 +88,7 @@ export default function DayDetailPage() {
         <Switch
           aria-label="朝食の状態"
           checked={breakfast}
-          onChange={(e) => setBreakfast(e.checked)}
+          onChange={(e) => setBreakfast(e.target.checked)}
         />
       </div>
       <div className="text-center mt-5">
@@ -96,14 +96,14 @@ export default function DayDetailPage() {
         <Switch
           aria-label="夕食の状態"
           checked={dinner}
-          onChange={(e) => setDinner(e.checked)}
+          onChange={(e) => setDinner(e.target.checked)}
         />
       </div>
       <div className="text-center mt-5">
         <p className="mb-1">サプリメント</p>
         <Switch
           aria-label="サプリメントの状態"
-          onChange={(e) => setSupplement(e.checked)}
+          onChange={(e) => setSupplement(e.target.checked)}
           checked={supplement}
           ref={ref}
         />
