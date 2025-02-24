@@ -1,6 +1,7 @@
 const nextConfig = {
   experimental: {
     serverActions: {},
+    optimizePackageImports: ["@chakra-ui/react"],
   },
 };
 

@@ -1,10 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Switch } from "@heroui/switch";
 import { useEffect, useRef, useState } from "react";
-import { Textarea } from "@heroui/input";
-import { Button } from "@heroui/react";
 import {
   saveData,
   getData,
@@ -12,6 +9,8 @@ import {
   deleteData,
 } from "@/components//hooks/useFirestore";
 import { useParams } from "next/navigation";
+import { Switch } from "@chakra-ui/react";
+import { Textarea } from "@chakra-ui/react";
 
 export default function DayDetailPage() {
   const ref = useRef<HTMLInputElement>(null);
@@ -77,41 +76,64 @@ export default function DayDetailPage() {
       </p>
       <div className="text-center mt-5">
         <p className="mb-1">散歩</p>
-        <Switch
-          aria-label="散歩の状態"
+        <Switch.Root
           checked={stroll}
-          onChange={(e) => setStroll(e.target.checked)}
-        />
+          colorPalette="blue"
+          onCheckedChange={(e) => setStroll(e.checked)}
+        >
+          <Switch.HiddenInput />
+          <Switch.Control>
+            <Switch.Thumb />
+          </Switch.Control>
+          <Switch.Label />
+        </Switch.Root>
       </div>
       <div className="text-center mt-5">
         <p className="mb-1">朝食</p>
-        <Switch
-          aria-label="朝食の状態"
+        <Switch.Root
           checked={breakfast}
-          onChange={(e) => setBreakfast(e.target.checked)}
-        />
+          colorPalette="blue"
+          onCheckedChange={(e) => setBreakfast(e.checked)}
+        >
+          <Switch.HiddenInput />
+          <Switch.Control>
+            <Switch.Thumb />
+          </Switch.Control>
+          <Switch.Label />
+        </Switch.Root>
       </div>
       <div className="text-center mt-5">
         <p className="mb-1">夕食</p>
-        <Switch
-          aria-label="夕食の状態"
+        <Switch.Root
           checked={dinner}
-          onChange={(e) => setDinner(e.target.checked)}
-        />
+          colorPalette="blue"
+          onCheckedChange={(e) => setDinner(e.checked)}
+        >
+          <Switch.HiddenInput />
+          <Switch.Control>
+            <Switch.Thumb />
+          </Switch.Control>
+          <Switch.Label />
+        </Switch.Root>
       </div>
-      <div className="text-center mt-5">
+      <div className="text-center mt-5 ">
         <p className="mb-1">サプリメント</p>
-        <Switch
-          aria-label="サプリメントの状態"
-          onChange={(e) => setSupplement(e.target.checked)}
+        <Switch.Root
           checked={supplement}
-          ref={ref}
-        />
+          colorPalette="blue"
+          onCheckedChange={(e) => setSupplement(e.checked)}
+        >
+          <Switch.HiddenInput />
+          <Switch.Control>
+            <Switch.Thumb />
+          </Switch.Control>
+          <Switch.Label />
+        </Switch.Root>
       </div>
       <div className="text-center mt-5">
         <p className="mb-1">メモ</p>
         <Textarea
-          variant="bordered"
+          autoresize
           className="max-w-xs mx-auto"
           placeholder="メッセージを入力してください"
           value={memo}
@@ -120,18 +142,27 @@ export default function DayDetailPage() {
       </div>
       <div className="text-center mt-20 flex justify-end gap-2">
         {hasData ? (
-          <Button color="success" onPress={handleUpdate}>
-            更新
-          </Button>
+          <input
+            type="button"
+            value="更新"
+            color="success"
+            onClick={handleUpdate}
+          />
         ) : (
-          <Button color="primary" onPress={handleSave}>
-            保存
-          </Button>
+          <input
+            type="button"
+            value="保存"
+            color="primary"
+            onClick={handleSave}
+          />
         )}
         {hasData && (
-          <Button color="danger" onPress={handleDelete}>
-            削除
-          </Button>
+          <input
+            type="button"
+            value="削除"
+            color="danger"
+            onClick={handleDelete}
+          />
         )}
       </div>
     </div>
