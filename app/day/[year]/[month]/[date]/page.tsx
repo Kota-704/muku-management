@@ -111,7 +111,7 @@ export default function DayDetailPage() {
       <div className="text-center mt-5">
         <p className="mb-1">メモ</p>
         <Textarea
-          variant="faded"
+          variant="bordered"
           className="max-w-xs mx-auto"
           placeholder="メッセージを入力してください"
           value={memo}
