@@ -1,19 +1,22 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import localeData from "dayjs/plugin/localeData";
 import { useDrag } from "@use-gesture/react";
 import Link from "next/link";
-// import { useSwitchState } from "./hooks/useSwitchState";
+import Image from "next/image";
+import { getData } from "@/components/hooks/useFirestore";
 
 dayjs.extend(weekday);
 dayjs.extend(localeData);
 
 export default function CalendarBody() {
   const [currentDate, setCurrentDate] = useState(dayjs());
-
+  const [dayData, setDayData] = useState<Record<string, any>>({});
   const daysInMonth = currentDate.daysInMonth();
   const offset = currentDate.startOf("month").weekday();
   const monthLabel = currentDate.format("M月");
@@ -51,7 +54,22 @@ export default function CalendarBody() {
     cancel();
   });
 
-  // const { isSupplementEnabled } = useSwitchState();
+  useEffect(() => {
+    async function fetchMonthData() {
+      const newData: Record<string, any> = {};
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateKey = `${currentDate.format("YYYY")}-${currentDate.format(
+          "MM"
+        )}-${String(day).padStart(2, "0")}`;
+        const data = await getData(dateKey);
+        if (data) {
+          newData[dateKey] = data;
+        }
+      }
+      setDayData(newData);
+    }
+    fetchMonthData();
+  }, [currentDate]);
 
   return (
     <div {...bind()} className="calendar-body" style={{ touchAction: "none" }}>
@@ -84,6 +102,11 @@ export default function CalendarBody() {
         {/* 各日付のセル */}
         {Array.from({ length: daysInMonth }, (_, i) => {
           const day = i + 1;
+          const dateKey = `${currentDate.format("YYYY")}-${currentDate.format(
+            "MM"
+          )}-${String(day).padStart(2, "0")}`;
+
+          const data = dayData[dateKey];
           const isToday = day === today && currentDate.month() === todayMonth;
 
           return (
@@ -103,9 +126,19 @@ export default function CalendarBody() {
                   {day}
                 </span>
                 <div className="">
-                  {/* <p>
-                    スイッチの状態（親側）: {isSupplementEnabled ? "ON" : "OFF"}
-                  </p> */}
+                  {data &&
+                    data.stroll &&
+                    data.breakfast &&
+                    data.dinner &&
+                    data.supplement && (
+                      <Image
+                        src="/checked.png"
+                        width={20}
+                        height={20}
+                        alt="Check"
+                        className="mx-auto mt-1"
+                      />
+                    )}
                 </div>
               </Link>
             </div>
