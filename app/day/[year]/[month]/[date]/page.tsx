@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   saveData,
   getData,
@@ -14,7 +14,6 @@ import { Textarea } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 
 export default function DayDetailPage() {
-  const ref = useRef<HTMLInputElement>(null);
   const [memo, setMemo] = useState("");
   const [stroll, setStroll] = useState<boolean | null>(null);
   const [breakfast, setBreakfast] = useState<boolean | null>(null);
@@ -43,16 +42,16 @@ export default function DayDetailPage() {
   }, [date]);
 
   const handleSave = async () => {
-    const supplementValue = ref.current ? ref.current.checked : false;
     const date = `${params.year}-${params.month}-${params.date}`;
     await saveData(
       date,
       stroll ?? false,
       breakfast ?? false,
       dinner ?? false,
-      supplementValue,
+      supplement ?? false,
       memo
     );
+    alert("データを保存しました");
   };
 
   const handleUpdate = async () => {
