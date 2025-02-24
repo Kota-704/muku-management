@@ -67,11 +67,6 @@ export default function DayDetailPage() {
     }
   };
 
-  function handleRef(): boolean {
-    const supplementValue = ref.current ? ref.current.checked : false;
-    return supplementValue;
-  }
-
   return (
     <div>
       <Link href="/" className="text-right block mt-5">
