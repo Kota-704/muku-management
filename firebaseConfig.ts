@@ -1,10 +1,10 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore"; // Firestore
+import { getFirestore } from "firebase/firestore"; // Firestore
 // import { getAuth, connectAuthEmulator } from "firebase/auth"; // Auth
-import { getStorage, connectStorageEmulator } from "firebase/storage"; // Storage
+import { getStorage } from "firebase/storage"; // Storage
 // import { getAnalytics } from "firebase/analytics"; // Analytics
-import { getFunctions, connectFunctionsEmulator } from "firebase/functions"; // Functions
+import { getFunctions } from "firebase/functions"; // Functions
 // import { getPerformance } from "firebase/performance"; // Performance
 // import { getRemoteConfig } from "firebase/remote-config"; // Remote Config
 // import { getMessaging } from "firebase/messaging"; // Messaging
@@ -39,10 +39,10 @@ export const functions = getFunctions(app); // Cloud Functions
 // export const database = getDatabase(app); // Realtime Database
 
 // **エミュレーター環境での接続**（ローカル開発用）
-if (process.env.NODE_ENV === "development") {
-  connectFirestoreEmulator(db, "localhost", 8080);
-  // connectAuthEmulator(auth, "http://localhost:9099");
-  connectStorageEmulator(storage, "localhost", 9199);
-  connectFunctionsEmulator(functions, "localhost", 5001);
-  // connectDatabaseEmulator(database, "localhost", 9000);
-}
+// if (process.env.NODE_ENV === "development") {
+//   connectFirestoreEmulator(db, "localhost", 8080);
+//   // connectAuthEmulator(auth, "http://localhost:9099");
+//   connectStorageEmulator(storage, "localhost", 9199);
+//   connectFunctionsEmulator(functions, "localhost", 5001);
+//   // connectDatabaseEmulator(database, "localhost", 9000);
+// }
