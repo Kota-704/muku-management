@@ -118,9 +118,7 @@ export default function CalendarBody() {
               >
                 <span
                   className={`block w-5 h-5 mx-auto ${
-                    isToday
-                      ? "rounded-full bg-red-500 text-white"
-                      : "text-white"
+                    isToday ? "rounded-full bg-red-500" : ""
                   }`}
                 >
                   {day}
