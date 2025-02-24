@@ -14,25 +14,31 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "椋の管理アプリ",
-  description: "椋の管理を共有するアプリ",
-  keywords: ["椋", "管理", "アプリ"],
-  openGraph: {
+export async function generateMetadata(): Promise<Metadata> {
+  return {
     title: "椋の管理アプリ",
     description: "椋の管理を共有するアプリ",
-    type: "website",
-    url: "https://muku-management.vercel.app",
-    images: [
-      {
-        url: "/muku_ogp.png",
-        width: 1200,
-        height: 630,
-        alt: "椋の管理アプリ",
-      },
-    ],
-  },
-};
+    keywords: ["椋", "管理", "アプリ"],
+    openGraph: {
+      title: "椋の管理アプリ",
+      description: "椋の管理を共有するアプリ",
+      type: "website",
+      url: "https://muku-management.vercel.app",
+      images: [
+        {
+          url: "/muku_ogp.png",
+          width: 1200,
+          height: 630,
+          alt: "椋の管理アプリ",
+        },
+      ],
+    },
+    icons: {
+      apple: "/apple-touch-icon.png",
+    },
+    manifest: "/manifest.json",
+  };
+}
 
 export default function RootLayout({
   children,
