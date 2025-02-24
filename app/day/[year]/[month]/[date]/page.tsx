@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Switch } from "@heroui/switch";
 import { use, useRef, useState } from "react";
 import { Textarea } from "@heroui/input";
+import { Button } from "@heroui/react";
 import { saveData } from "@/components/hooks/useFirestore";
 
 export default function DayDetailPage({
@@ -28,7 +29,9 @@ export default function DayDetailPage({
 
   return (
     <div>
-      <Link href="/">戻る</Link>
+      <Link href="/" className="text-right block mt-5">
+        戻る
+      </Link>
       <p className="text-center text-xl">
         {resolvedParams.year}年{resolvedParams.month}月{resolvedParams.date}日
       </p>
@@ -43,14 +46,17 @@ export default function DayDetailPage({
       <div className="text-center mt-5">
         <p className="mb-1">メッセージ</p>
         <Textarea
+          variant="faded"
           className="max-w-xs mx-auto"
           placeholder="メッセージを入力してください"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
       </div>
-      <div className="text-center mt-5">
-        <button onClick={handleSave}>保存</button>
+      <div className="text-center mt-20">
+        <Button color="primary" onClick={handleSave}>
+          保存
+        </Button>
       </div>
     </div>
   );
