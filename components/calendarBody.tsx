@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import localeData from "dayjs/plugin/localeData";
@@ -21,7 +21,7 @@ export default function CalendarBody() {
   const offset = currentDate.startOf("month").weekday();
   const monthLabel = currentDate.format("M月");
   const yearLabel = currentDate.format("YYYY年");
-  const today = dayjs().date();
+  const today = useMemo(() => dayjs(), []);
   const todayMonth = dayjs().month();
   const lastSwipeTime = useRef(0);
 
@@ -36,6 +36,7 @@ export default function CalendarBody() {
   const bind = useDrag(({ movement: [mx], direction: [dx], down, cancel }) => {
     if (down) return;
 
+    // 複数スワイプ防止
     const now = Date.now();
     if (now - lastSwipeTime.current < 500) {
       cancel();
@@ -107,7 +108,8 @@ export default function CalendarBody() {
           )}-${String(day).padStart(2, "0")}`;
 
           const data = dayData[dateKey];
-          const isToday = day === today && currentDate.month() === todayMonth;
+          const isToday =
+            day === today.date() && currentDate.month() === todayMonth;
 
           return (
             <div key={day} className="text-center h-20">
