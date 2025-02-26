@@ -3,10 +3,11 @@ import {
   collection,
   doc,
   setDoc,
-  getDoc,
   updateDoc,
   deleteDoc,
   Timestamp,
+  getDocFromCache,
+  getDocFromServer,
 } from "firebase/firestore";
 
 export async function saveData(
@@ -34,13 +35,22 @@ export async function saveData(
 export async function getData(date: string) {
   try {
     const docRef = doc(db, "userData", date);
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getDocFromCache(docRef);
     if (docSnap.exists()) {
       return docSnap.data();
     }
     return null;
   } catch (e) {
     console.error("データ取得エラー:", e);
+    try {
+      const docRef = doc(db, "userData", date);
+      const docSnap = await getDocFromServer(docRef);
+      if (docSnap.exists()) {
+        return docSnap.data();
+      }
+    } catch (e) {
+      console.error("データ取得エラー:", e);
+    }
     return null;
   }
 }
