@@ -68,7 +68,7 @@ export default function DayDetailPage() {
       <div className="text-center mt-20 flex justify-end gap-2">
         {hasData ? (
           <Button
-            colorPalette="blue"
+            colorScheme="blue"
             variant="subtle"
             onClick={() => {
               handleUpdate();
@@ -78,7 +78,7 @@ export default function DayDetailPage() {
           </Button>
         ) : (
           <Button
-            colorPalette="blue"
+            colorScheme="blue"
             variant="subtle"
             color="primary"
             onClick={handleSave}
@@ -88,7 +88,7 @@ export default function DayDetailPage() {
         )}
         {hasData && (
           <Button
-            colorPalette="blue"
+            colorScheme="blue"
             variant="subtle"
             color="primary"
             onClick={handleDelete}

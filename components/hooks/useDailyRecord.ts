@@ -14,6 +14,8 @@ export default function useDailyRecord() {
   const [dinner, setDinner] = useState<boolean | null>(null);
   const [supplement, setSupplement] = useState<boolean | null>(null);
   const [hasData, setHasData] = useState(false);
+  const [isAllChecked, setIsAllChecked] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
   const params = useParams();
   const date = `${params.year}-${params.month}-${params.date}`;
 
@@ -34,6 +36,10 @@ export default function useDailyRecord() {
     fetchData();
   }, [date]);
 
+  useEffect(() => {
+    setIsAllChecked(stroll && breakfast && dinner && supplement ? true : false);
+  }, [stroll, breakfast, dinner, supplement]);
+
   const handleSave = async () => {
     const date = `${params.year}-${params.month}-${params.date}`;
     await saveData(
@@ -45,6 +51,10 @@ export default function useDailyRecord() {
       memo
     );
     alert("データを保存しました");
+
+    if (isAllChecked) {
+      setShowDialog(true);
+    }
   };
 
   const handleUpdate = async () => {
@@ -57,6 +67,10 @@ export default function useDailyRecord() {
     };
     await updateData(date, updatedFields);
     alert("データを更新しました");
+
+    if (isAllChecked) {
+      setShowDialog(true);
+    }
   };
 
   const handleDelete = async () => {
@@ -86,5 +100,6 @@ export default function useDailyRecord() {
     handleSave,
     handleUpdate,
     handleDelete,
+    showDialog,
   };
 }
