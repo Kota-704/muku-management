@@ -8,6 +8,7 @@ export interface DayData {
   breakfast?: boolean;
   dinner?: boolean;
   supplement?: boolean;
+  memo?: string;
 }
 export default function useGetDate() {
   const [currentDate, setCurrentDate] = useState(dayjs());

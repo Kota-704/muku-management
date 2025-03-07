@@ -16,6 +16,11 @@ export default {
       },
     },
   },
+  safelist: [
+    {
+      pattern: /text-\[var\(--foreground\)\]/,
+    },
+  ],
   darkMode: "class",
   plugins: [heroui()],
 } satisfies Config;
