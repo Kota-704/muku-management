@@ -2,6 +2,7 @@ import { useDrag } from "@use-gesture/react";
 import dayjs from "dayjs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getData } from "./useFirestore";
+import { clearInterval } from "timers";
 
 export interface DayData {
   stroll?: boolean;
@@ -50,6 +51,18 @@ export default function useGetDate() {
     cancel();
   });
 
+  // 日付を跨いだら `currentDate` を更新する
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = dayjs();
+      if (!currentDate.isSame(now, "day")) {
+        setCurrentDate(now);
+      }
+    }, 1000 * 60);
+    return () => clearInterval(interval);
+  }, [currentDate]);
+
+  // Firestore のデータ取得
   useEffect(() => {
     async function fetchMonthData() {
       const newData: Record<string, unknown> = {};
