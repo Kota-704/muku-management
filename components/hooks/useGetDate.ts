@@ -2,7 +2,6 @@ import { useDrag } from "@use-gesture/react";
 import dayjs from "dayjs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getData } from "./useFirestore";
-import { clearInterval } from "timers";
 
 export interface DayData {
   stroll?: boolean;
