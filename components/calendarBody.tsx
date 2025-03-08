@@ -35,7 +35,7 @@ export default function CalendarBody() {
       .getPropertyValue("--foreground")
       .trim();
     setColor(computedColor);
-  });
+  }, []);
 
   return (
     <div {...bind()} className="calendar-body" style={{ touchAction: "none" }}>
