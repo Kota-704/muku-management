@@ -1,7 +1,10 @@
 import { useDrag } from "@use-gesture/react";
 import dayjs from "dayjs";
+import weekday from "dayjs/plugin/weekday";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getData } from "./useFirestore";
+
+dayjs.extend(weekday);
 
 export interface DayData {
   stroll?: boolean;
@@ -19,7 +22,8 @@ export default function useGetDate() {
   const yearLabel = currentDate.format("YYYY年");
   const today = useMemo(() => dayjs(), []);
   const todayMonth = dayjs().month();
-  const lastSwipeTime = useRef(0);
+  const lastSwipeTimeDate = useRef(0);
+  const lastSwipeTimeMonth = useRef(0);
 
   const prevMonth = () => {
     setCurrentDate((prev) => prev.subtract(1, "month"));
@@ -27,6 +31,36 @@ export default function useGetDate() {
   const nextMonth = () => {
     setCurrentDate((prev) => prev.add(1, "month"));
   };
+  const prevDate = () => {
+    setCurrentDate((current) => current.subtract(1, "day"));
+  };
+  const nextDate = () => {
+    setCurrentDate((current) => current.add(1, "day"));
+  };
+
+  const moveDate = useDrag(
+    ({ movement: [mx], direction: [dx], down, cancel }) => {
+      if (down) return;
+
+      // 複数スワイプ防止
+      const now = Date.now();
+      if (now - lastSwipeTimeDate.current < 500) {
+        cancel();
+        return;
+      }
+      lastSwipeTimeDate.current = now;
+
+      const swipeThreshold = 50;
+      if (Math.abs(mx) < swipeThreshold) {
+        cancel();
+        return;
+      }
+
+      if (dx > 0) prevDate();
+      if (dx < 0) nextDate();
+      cancel();
+    }
+  );
 
   // スワイプハンドラー
   const bind = useDrag(({ movement: [mx], direction: [dx], down, cancel }) => {
@@ -34,11 +68,11 @@ export default function useGetDate() {
 
     // 複数スワイプ防止
     const now = Date.now();
-    if (now - lastSwipeTime.current < 500) {
+    if (now - lastSwipeTimeMonth.current < 500) {
       cancel();
       return;
     }
-    lastSwipeTime.current = now;
+    lastSwipeTimeMonth.current = now;
 
     const swipeThreshold = 50;
     if (Math.abs(mx) < swipeThreshold) {
@@ -91,9 +125,11 @@ export default function useGetDate() {
     yearLabel,
     today,
     todayMonth,
-    lastSwipeTime,
     prevMonth,
     nextMonth,
     bind,
+    moveDate,
+    lastSwipeTimeDate,
+    lastSwipeTimeMonth,
   };
 }

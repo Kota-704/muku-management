@@ -6,6 +6,10 @@ import { Button } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
 import useDailyRecord from "@/components/hooks/useDailyRecord";
 import SwitchInput from "@/components/common/SwitchInput";
+import dayjs from "dayjs";
+import { useMemo } from "react";
+import useGetDate from "@/components/hooks/useGetDate";
+import { useRouter } from "next/navigation";
 
 export default function DayDetailPage() {
   const {
@@ -25,10 +29,40 @@ export default function DayDetailPage() {
     hasData,
   } = useDailyRecord();
 
+  const router = useRouter();
+
+  const { moveDate } = useGetDate();
+
   const params = useParams();
 
+  const currentDate = dayjs(`${params.year}-${params.month}-${params.date}`);
+  const prevDate = useMemo(() => currentDate.subtract(1, "day"), [currentDate]);
+  const nextDate = useMemo(() => currentDate.add(1, "day"), [currentDate]);
+
+  const goToPrevDate = () => {
+    router.push(
+      `/day/${prevDate.format("YYYY")}/${prevDate.format(
+        "MM"
+      )}/${prevDate.format("D")}`
+    );
+  };
+  const goToNextDate = () => {
+    router.push(
+      `/day/${nextDate.format("YYYY")}/${nextDate.format(
+        "MM"
+      )}/${nextDate.format("D")}`
+    );
+  };
+
   return (
-    <div>
+    <div {...moveDate} className="date-detail" style={{ touchAction: "none" }}>
+      <div className="flex justify-between mt-5">
+        {/* 🔽 前の日付に遷移 */}
+        <button onClick={goToPrevDate}>← {prevDate.format("M月D日")}</button>
+
+        {/* 🔽 次の日付に遷移 */}
+        <button onClick={goToNextDate}>{nextDate.format("M月D日")} →</button>
+      </div>
       <Link href="/" className="text-right block mt-5">
         戻る
       </Link>
