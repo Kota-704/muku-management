@@ -22,6 +22,7 @@ export default function CalendarBody() {
     yearLabel,
     today,
     todayMonth,
+    isPageLoaded,
     prevMonth,
     nextMonth,
     bind,
@@ -70,18 +71,20 @@ export default function CalendarBody() {
           const day = i + 1;
           const dateKey = `${currentDate.format("YYYY")}-${currentDate.format(
             "MM"
-          )}-${day}`;
+          )}-${day}`; // Firestoreの形式 `YYYY-MM-D` を維持
 
           const data: DayData = dayData[dateKey] || {};
           const isToday =
-            day === today.date() && currentDate.month() === todayMonth;
+            isPageLoaded &&
+            day === today.date() &&
+            currentDate.month() === todayMonth;
 
           return (
             <div key={day} className="text-center h-20">
               <Link
                 href={`/day/${currentDate.format("YYYY")}/${currentDate.format(
                   "MM"
-                )}/${day}`}
+                )}/${day}`} // ここも `YYYY-MM-D` の形式を維持
               >
                 <span
                   className={`block w-5 h-5 mx-auto ${
