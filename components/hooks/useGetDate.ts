@@ -1,7 +1,7 @@
 import { useDrag } from "@use-gesture/react";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getData } from "./useFirestore";
 
 dayjs.extend(weekday);
@@ -20,10 +20,11 @@ export default function useGetDate() {
   const offset = currentDate.startOf("month").weekday();
   const monthLabel = currentDate.format("M月");
   const yearLabel = currentDate.format("YYYY年");
-  const today = useMemo(() => dayjs(), []);
+  const [today, setToday] = useState(dayjs());
   const todayMonth = dayjs().month();
   const lastSwipeTimeDate = useRef(0);
   const lastSwipeTimeMonth = useRef(0);
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
 
   const prevMonth = () => {
     setCurrentDate((prev) => prev.subtract(1, "month"));
@@ -114,6 +115,33 @@ export default function useGetDate() {
     fetchMonthData();
   }, [currentDate, daysInMonth]);
 
+  useEffect(() => {
+    const handleLoad = () => {
+      setToday(dayjs());
+      setIsPageLoaded(true);
+    };
+
+    if (document.readyState === "complete") {
+      setToday(dayjs());
+      setIsPageLoaded(true);
+    } else {
+      window.addEventListener("load", handleLoad);
+      return () => window.removeEventListener("load", handleLoad);
+    }
+  }, []);
+
+  // 🔹 日付を跨いだら `currentDate` を更新する
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = dayjs();
+      if (!currentDate.isSame(now, "day")) {
+        setCurrentDate(now);
+      }
+      setToday(now); // 🔹 today も更新する
+    }, 1000 * 60);
+    return () => clearInterval(interval);
+  }, [currentDate]);
+
   return {
     dayData,
     setDayData,
@@ -131,5 +159,6 @@ export default function useGetDate() {
     moveDate,
     lastSwipeTimeDate,
     lastSwipeTimeMonth,
+    isPageLoaded,
   };
 }
